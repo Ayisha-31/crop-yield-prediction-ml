@@ -166,7 +166,49 @@ models['Voting Ensemble'] = VotingRegressor(
 print(f"✓ Total models: {len(models)}")
 
 
+# ==============================================================================
+# STEP 4: HYPERPARAMETER TUNING
+# ==============================================================================
+# Hyperparameter space for Random Forest
+param_dist = {
+    'n_estimators': [50, 100, 150],
+    'max_depth': [None, 10, 15, 20],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
 
+from sklearn.model_selection import RandomizedSearchCV
+
+print("\n[HYPERPARAMETER TUNING] Random Forest...")
+
+rf = RandomForestRegressor(
+    random_state=42,
+    n_jobs=1
+)
+
+rf_search = RandomizedSearchCV(
+    estimator=rf,
+    param_distributions=param_dist,
+    n_iter=20,
+    scoring='r2',
+    cv=3,
+    random_state=42,
+    n_jobs=1,
+    verbose=1
+)
+
+rf_search.fit(X_train, y_train)
+
+best_rf = rf_search.best_estimator_
+
+print("✓ Best RF Params:", rf_search.best_params_)
+print("✓ Best CV R²:", rf_search.best_score_)
+
+# Replace model
+models['Random Forest'] = best_rf
+
+
+print(f"✓ Total models: {len(models)}")
 # ==============================================================================
 # STEP 5: TRAIN ALL MODELS
 # ==============================================================================
