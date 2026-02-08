@@ -1,8 +1,6 @@
 """
 CROP YIELD PREDICTION - VISUALIZATION SYSTEM
-===========================================
-Generates visual insights for the trained ML model
-Run: python visualization.py
+
 """
 
 import pandas as pd
@@ -14,9 +12,7 @@ import seaborn as sns
 import warnings
 warnings.filterwarnings("ignore")
 
-# ------------------------------------------------------------------
-# BASIC SETUP
-# ------------------------------------------------------------------
+
 print("="*60)
 print("CROP YIELD PREDICTION - VISUALIZATION SYSTEM")
 print("="*60)
@@ -24,9 +20,7 @@ print("="*60)
 sns.set(style="whitegrid")
 os.makedirs("visualizations", exist_ok=True)
 
-# ------------------------------------------------------------------
-# LOAD DATA
-# ------------------------------------------------------------------
+
 df = pd.read_csv("yield_df.csv")
 
 if "Unnamed: 0" in df.columns:
@@ -47,9 +41,7 @@ scaler = model_package["scaler"]
 
 best_model = models[best_model_name]
 
-# ------------------------------------------------------------------
-# PREPARE DATA FOR MODEL PLOTS
-# ------------------------------------------------------------------
+
 df_encoded = df.copy()
 
 for col in ["Area", "Item"]:
@@ -177,6 +169,7 @@ plt.savefig("visualizations/crop_yield_distribution.png")
 plt.close()
 
 # ------------------------------------------------------------------
-print("✅ VISUALIZATIONS GENERATED SUCCESSFULLY")
-print("📁 Files saved in: visualizations/")
+print(" VISUALIZATIONS GENERATED SUCCESSFULLY")
+print(" Files saved in: visualizations/")
 print("="*60)
+
