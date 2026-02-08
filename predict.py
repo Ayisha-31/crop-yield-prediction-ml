@@ -1,8 +1,6 @@
 """
 SIMPLE PREDICTION SCRIPT
-========================
-Make predictions using the trained model
-Run: python predict.py
+
 """
 
 import pandas as pd
@@ -14,9 +12,7 @@ print("="*60)
 print("CROP YIELD PREDICTION - PREDICTION SYSTEM")
 print("="*60)
 
-# ==============================================================================
-# STEP 1: LOAD TRAINED MODEL
-# ==============================================================================
+
 print("\n[STEP 1] Loading trained model...")
 
 try:
@@ -37,9 +33,7 @@ except FileNotFoundError:
     print("Run: python train_model.py")
     exit()
 
-# ==============================================================================
-# STEP 2: INPUT DATA
-# ==============================================================================
+
 print("\n[STEP 2] Preparing prediction inputs...")
 
 predictions_data = [
@@ -55,12 +49,7 @@ predictions_data = [
 
 print(f"✓ Prepared {len(predictions_data)} request(s)")
 
-# ==============================================================================
-# STEP 3: MAKE PREDICTIONS
-# ==============================================================================
-# ======================================================================
-# STEP 3: MAKE PREDICTIONS (SAFE VERSION)
-# ======================================================================
+
 print("\n[STEP 3] Making predictions...")
 print("="*60)
 
@@ -85,7 +74,7 @@ for i, input_data in enumerate(predictions_data, 1):
             input_df[col] = encoders[col].transform(input_df[col])
 
     else:
-        # ---------- Scale numerical ----------
+      
         numerical_cols = [
             'Year',
             'average_rain_fall_mm_per_year',
@@ -94,7 +83,6 @@ for i, input_data in enumerate(predictions_data, 1):
         ]
         input_df[numerical_cols] = scaler.transform(input_df[numerical_cols])
 
-        # ---------- Predict ----------
         prediction = best_model.predict(input_df)[0]
 
         print(f"  ✓ Predicted Yield: {prediction:.2f} hg/ha")
@@ -108,9 +96,7 @@ for i, input_data in enumerate(predictions_data, 1):
         })
 
 
-# ==============================================================================
-# STEP 4: SAVE RESULTS
-# ==============================================================================
+
 print("\n" + "="*60)
 print("[STEP 4] Saving predictions...")
 
@@ -119,11 +105,9 @@ results_df.to_csv("predictions.csv", index=False)
 
 print("✓ Saved predictions.csv")
 
-# ==============================================================================
-# DONE
-# ==============================================================================
+
 print("\n" + "="*60)
-print("✅ PREDICTION COMPLETE")
+print("PREDICTION COMPLETE")
 print("="*60)
 print(results_df.to_string(index=False))
 
