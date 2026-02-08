@@ -31,9 +31,7 @@ print("="*60)
 print("CROP YIELD PREDICTION - TRAINING SYSTEM")
 print("="*60)
 
-# ==============================================================================
 # STEP 1: LOAD YOUR DATA
-# ==============================================================================
 print("\n[STEP 1] Loading data...")
 
 try:
@@ -45,7 +43,6 @@ except:
     print("  1. Download dataset from Kaggle: https://www.kaggle.com/datasets/patelris/crop-yield-prediction-dataset")
     print("  2. Or use the sample data generator below")
     
-    # Generate sample data for testing
     print("\n→ Generating sample data for demonstration...")
     np.random.seed(42)
     global_df = pd.DataFrame({
@@ -62,16 +59,14 @@ if 'Unnamed: 0' in global_df.columns:
     global_df = global_df.drop(columns=['Unnamed: 0'])
     print("✓ Dropped unwanted column: 'Unnamed: 0'")
 
-# ==============================================================================
 # STEP 2: PREPROCESS DATA
-# ==============================================================================
 print("\n[STEP 2] Preprocessing data...")
 
 # Remove missing values
 global_df = global_df.dropna()
 print(f"✓ After removing NaN: {global_df.shape}")
 
-# Encode categorical variables (FIXED VERSION - separate encoder for each column)
+# Encode categorical variables 
 encoders = {}
 for col in ['Area', 'Item']:
     encoders[col] = LabelEncoder()
@@ -85,7 +80,7 @@ y = global_df[target_col]
 print(f"✓ Features: {X.columns.tolist()}")
 print(f"✓ Target: {target_col}")
 
-# Scale numerical features
+
 numerical_cols = ['Year', 'average_rain_fall_mm_per_year', 'pesticides_tonnes', 'avg_temp']
 scaler = RobustScaler()
 X[numerical_cols] = scaler.fit_transform(X[numerical_cols])
@@ -96,9 +91,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 print(f"✓ Train set: {X_train.shape}, Test set: {X_test.shape}")
 
-# ==============================================================================
-# STEP 3: BUILD AND TRAIN MODELS
-# ==============================================================================
+
 print("\n[STEP 3] Building models (RAM-safe)...")
 
 models = {
@@ -159,9 +152,6 @@ models['Voting Ensemble'] = VotingRegressor(
 print(f"✓ Total models: {len(models)}")
 
 
-# ==============================================================================
-# STEP 4: HYPERPARAMETER TUNING
-# ==============================================================================
 # Hyperparameter space for Random Forest
 param_dist = {
     'n_estimators': [50, 100, 150],
@@ -202,9 +192,9 @@ models['Random Forest'] = best_rf
 
 
 print(f"✓ Total models: {len(models)}")
-# ==============================================================================
+
 # STEP 5: TRAIN ALL MODELS
-# ==============================================================================
+
 print("\n[STEP 5] Training models (this may take 2-3 minutes)...")
 
 results = []
@@ -247,9 +237,7 @@ print(f"\n🏆 BEST MODEL: {best_model_name}")
 print(f"   R² Score: {results_df.iloc[0]['R²']:.4f}")
 print(f"   RMSE: {results_df.iloc[0]['RMSE']:.2f}")
 
-# ==============================================================================
 # STEP 7: SAVE MODELS
-# ==============================================================================
 print("\n[STEP 7] Saving models...")
 
 
@@ -276,9 +264,7 @@ print("✓ Models saved to: models/crop_yield_model.pkl")
 results_df.to_csv('models/model_performance.csv', index=False)
 print("✓ Results saved to: models/model_performance.csv")
 
-# ==============================================================================
 # STEP 8: TEST PREDICTION
-# ==============================================================================
 print("\n[STEP 8] Testing prediction with sample data...")
 
 
@@ -292,9 +278,7 @@ prediction = best_model.predict(sample_input)
 
 print(f"\n✓ Predicted Yield: {prediction[0]:.2f} hg/ha")
 
-# ==============================================================================
 # DONE!
-# ==============================================================================
 print("\n" + "="*60)
 print("✅ TRAINING COMPLETE!")
 print("="*60)
