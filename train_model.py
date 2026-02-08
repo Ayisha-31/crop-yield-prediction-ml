@@ -1,10 +1,5 @@
 
-"""
-SIMPLE CROP YIELD PREDICTION - TRAINING SCRIPT
-===============================================
-Beginner-friendly version - No Docker, No FastAPI needed!
-Just run: python train_model.py
-"""
+
 
 import pandas as pd
 import numpy as np
@@ -41,7 +36,6 @@ print("="*60)
 # ==============================================================================
 print("\n[STEP 1] Loading data...")
 
-# OPTION A: If you have the CSV files
 try:
     global_df = pd.read_csv("yield_df.csv")
     print(f"✓ Loaded global data: {global_df.shape}")
@@ -97,7 +91,6 @@ scaler = RobustScaler()
 X[numerical_cols] = scaler.fit_transform(X[numerical_cols])
 print("✓ Scaled numerical features")
 
-# Train-test split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
@@ -204,7 +197,7 @@ best_rf = rf_search.best_estimator_
 print("✓ Best RF Params:", rf_search.best_params_)
 print("✓ Best CV R²:", rf_search.best_score_)
 
-# Replace model
+
 models['Random Forest'] = best_rf
 
 
@@ -219,14 +212,13 @@ results = []
 for name, model in models.items():
     print(f"\n  Training {name}...", end=' ')
     
-    # Train the model
+
     model.fit(X_train, y_train)
     
 
-    # Make predictions
     y_pred = model.predict(X_test)
     
-    # Calculate metrics
+  
     mae = mean_absolute_error(y_test, y_pred)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
@@ -240,9 +232,7 @@ for name, model in models.items():
     
     print(f"✓ (RMSE: {rmse:.2f}, R²: {r2:.4f})")
 
-# ==============================================================================
-# STEP 6: DISPLAY RESULTS
-# ==============================================================================
+
 print("\n" + "="*60)
 print("MODEL PERFORMANCE COMPARISON")
 print("="*60)
@@ -262,11 +252,11 @@ print(f"   RMSE: {results_df.iloc[0]['RMSE']:.2f}")
 # ==============================================================================
 print("\n[STEP 7] Saving models...")
 
-# Create models directory
+
 import os
 os.makedirs('models', exist_ok=True)
 
-# Save the best model and all necessary components
+
 model_package = {
     'models': models,
     'best_model': best_model_name,
@@ -278,13 +268,11 @@ model_package = {
     'training_date': datetime.now().isoformat()
 }
 
-# Save to file
 with open('models/crop_yield_model.pkl', 'wb') as f:
     pickle.dump(model_package, f)
 
 print("✓ Models saved to: models/crop_yield_model.pkl")
 
-# Also save results as CSV
 results_df.to_csv('models/model_performance.csv', index=False)
 print("✓ Results saved to: models/model_performance.csv")
 
@@ -293,13 +281,12 @@ print("✓ Results saved to: models/model_performance.csv")
 # ==============================================================================
 print("\n[STEP 8] Testing prediction with sample data...")
 
-# Use a real row from training data (already encoded + scaled)
+
 sample_input = X_train.iloc[[0]].copy()
 
 print("\nSample Input (from training data):")
 print(sample_input)
 
-# Predict using the best model
 best_model = models[best_model_name]
 prediction = best_model.predict(sample_input)
 
